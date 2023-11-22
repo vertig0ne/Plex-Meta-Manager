@@ -15,6 +15,7 @@ from plexapi.video import Movie, Show, Season, Episode
 from retrying import retry
 from urllib import parse
 from xml.etree.ElementTree import ParseError
+from ratelimit import limits
 
 logger = util.logger
 
@@ -512,6 +513,7 @@ class Plex(Library):
         logger.info(f"Scanner: {self.scanner}")
         logger.info(f"Ratings Source: {self.ratings_source}")
 
+    @limits(calls=6, period=60)
     def notify(self, text, collection=None, critical=True):
         self.config.notify(text, server=self.PlexServer.friendlyName, library=self.name, collection=collection, critical=critical)
 
