@@ -10,6 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
+      - name: downcase REPO
+        run: |
+          echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
+
       - name: Check Out Repo
         uses: actions/checkout@v4
 
@@ -37,4 +41,4 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64,linux/arm64,linux/arm/v7
           push: true
-          tags: ghcr.io/${{ github.repository.lowercase }}:latest
+          tags: ghcr.io/${{ env.REPO }}:latest
