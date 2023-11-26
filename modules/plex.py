@@ -513,7 +513,6 @@ class Plex(Library):
         logger.info(f"Scanner: {self.scanner}")
         logger.info(f"Ratings Source: {self.ratings_source}")
 
-    @limits(calls=6, period=60)
     def notify(self, text, collection=None, critical=True):
         self.config.notify(text, server=self.PlexServer.friendlyName, library=self.name, collection=collection, critical=critical)
 
@@ -760,6 +759,7 @@ class Plex(Library):
             item.refresh()
             raise Failed(e)
 
+    @limits(calls=6, period=60)
     @retry(stop_max_attempt_number=6, wait_fixed=10000, retry_on_exception=util.retry_if_not_plex)
     def upload_poster(self, item, image, url=False):
         if url:
